@@ -6,28 +6,36 @@
 
 using namespace std;
 
+/* 
+This program tries to perform a 3D full scale simulation of the selective laser sintering process.
+A multiscale adaptive discrete element method is used for performing thermal simulations and the laser 
+beam is modeled as a Gaussian heat input on top of the powder bed.
+*/
+
 int main()
-{
-/*	int start_s = clock();
-	//Defining bed and particle dimensions (all dimensions in SI)
-	float bed_x, bed_y, bed_z;
+{	
+	/* Starting the chronometer */
+	int start_s = clock();
 
-	//Bed geometry
-	bed_x = 0.2;
-	bed_y = 0.2;
-	bed_z = 0.2;
+	/* Powder bed dimensions and layer thickness (all in milimeters) */
+	float bed_x, bed_y, bed_z, layer_thickness;
 
-	//Defining powder characteristics
-	ParticleChar PC1;
+	bed_x = 1.0;
+	bed_y = 1.0;
+	bed_z = 2.0;
+	layer_thickness = 0.05;
 
-	PC1.avgrd = 15.0/1000000.0;
-	PC1.stddev = 5.0/1000000.0;
-	PC1.packfrac = 0.575;
-	PC1.nmin = 700;
+	/* Powder packing properties */
+	ParticleChar PC1;	// Loading the powder packing data structre from SLS.h
 
-	//Making up the powder bed
-	PowderBed Bed;
-	Bed = PackingGenerator(PC1);
+	PC1.avgrd = 7.5/1000000.0;		// Average diameter of particles inside the packing
+	PC1.stddev = 2.5/1000000.0;		// Standard deviation of the particles inside packing
+	PC1.packfrac = 0.63;	// Packing fraction of the bed
+	PC1.nmin = 700;		// Minimum number of particles inside the bed
+
+	/* Making up the powder bed */
+	PowderBed Bed;		// Loading the data structure for storing particles inside the powder bed
+	Bed = PackingGenerator(PC1);	// Generating the desired packing 
 
 	//Making up the smaller packing within the large one
 	SPowderBed SBed;
@@ -49,6 +57,6 @@ int main()
 	int stop_s = clock();
 	cout<<"Stiffness matrices created"<<endl;
 	cout << "time: " << (stop_s - start_s)/double(CLOCKS_PER_SEC) << endl;
-*/
+
 	return 0;
 }
