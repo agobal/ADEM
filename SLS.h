@@ -84,6 +84,8 @@ ElementEdge EdgeFinder(struct PowderBed PB);
 
 int* CornerLocator(struct PowderBed PB, struct SPowderBed SPB);
 
+float* DiameterFinder(struct ParticleChar PC, float grid_volume);
+
 float** PsiGenerator(struct PowderBed PB, struct ElementEdge);
 
 float** Inverse(float** PsiC);
