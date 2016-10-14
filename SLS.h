@@ -1,14 +1,3 @@
-struct PowderBed{
-	float xparticles[800];
-	float yparticles[800];
-	float zparticles[800];
-	float rparticles[800];
-	int neighbors[800][10];
-	float xel;
-	float yel;
-	float zel;
-};
-
 struct SPowderBed{
 	float x_particles[800];
 	float y_particles[800];
@@ -74,22 +63,22 @@ struct ElementEdge{
 	extern float evaporation_temperature;
 	extern float mass;
 
-PowderBed PackingGenerator(struct ParticleChar mystruct);
+// PowderBed PackingGenerator(struct ParticleChar mystruct);
 
-SPowderBed SmallPackingGenerator(struct PowderBed Struct);
+/*SPowderBed SmallPackingGenerator(struct PowderBed Struct);
 
 ElementCoefficients ShFcnGen(struct PowderBed PB, struct SPowderBed SPB);
 
-ElementEdge EdgeFinder(struct PowderBed PB);
+ElementEdge EdgeFinder(struct PowderBed PB);*/
 
-int* CornerLocator(struct PowderBed PB, struct SPowderBed SPB);
+// int* CornerLocator(struct PowderBed PB, struct SPowderBed SPB);
 
 float* DiameterFinder(struct ParticleChar PC, float grid_volume);
 
-float** PsiGenerator(struct PowderBed PB, struct ElementEdge);
+// float** PsiGenerator(struct PowderBed PB, struct ElementEdge);
 
-float** Inverse(float** PsiC);
+// float** Inverse(float** PsiC);
 
-float** ElementStiffness(float* Ge, float** Ke);
+// float** ElementStiffness(float* Ge, float** Ke);
 
-void OutputWriter(PowderBed);
+// void OutputWriter(PowderBed);
