@@ -1,3 +1,12 @@
+struct PowderBed{
+	float x_particles[110];
+	float y_particles[110];
+	float z_particles[110];
+	float d_particles[110];
+	int neighbors[100][110][15];
+	int particle_count;
+};
+
 struct SPowderBed{
 	float x_particles[800];
 	float y_particles[800];
@@ -16,6 +25,22 @@ struct ParticleChar{
 	float stddev;
 	float packfrac;
 	int nmin;
+};
+
+struct BedGeometry{
+	float bed_x;
+	float bed_y;
+	float bed_z;
+	float layer_thickness;
+	float bed_volume;
+	float grid_x;
+	float grid_y;
+	float grid_z;
+	float grid_volume;
+	int num_grid_x;
+	int num_grid_y;
+	int num_grid_z;
+	int num_grid;
 };
 
 struct ElementCoefficients{
@@ -63,7 +88,7 @@ struct ElementEdge{
 	extern float evaporation_temperature;
 	extern float mass;
 
-// PowderBed PackingGenerator(struct ParticleChar mystruct);
+PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
 
 /*SPowderBed SmallPackingGenerator(struct PowderBed Struct);
 
