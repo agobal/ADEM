@@ -1,8 +1,8 @@
 struct PowderBed{
-	float x_particles[110];
-	float y_particles[110];
-	float z_particles[110];
-	float d_particles[110];
+	float x_particles[100][110];
+	float y_particles[100][110];
+	float z_particles[100][110];
+	float d_particles[100][110];
 	int neighbors[100][110][15];
 	int particle_count;
 };

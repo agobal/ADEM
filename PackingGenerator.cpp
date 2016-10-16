@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "SLS.h"
-#include <boost/random.hpp>
-#include <boost/random/normal_distribution.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/tuple/tuple_io.hpp>
 
 using namespace std;
 
@@ -43,12 +39,38 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 	for (int c = 0; c < BG1.num_grid; ++c)
 	{
 		// Filling out the neighboring particle numbers for relocation
-		float neighbor_particles[7*Bed.particle_count];
+		float neighbor_particles[4*Bed.particle_count];
+		counter = 0;
 		for (int c1 = 0; c1 < Bed.particle_count; ++c1)
 		{
-			neighbor_particles[c1] = c1;
+			neighbor_particles[counter] = c1;
+			counter = counter + 1;
 		}
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		if (BG1.num_grid_x != 1) && (cell_x_num[c] != 1)
+		{
+			for (int c1 = 0; c1 < Bed.particle_count; ++c1)
+			{
+				neighbor_particles[counter] = c1 + c*1000;
+				counter = counter + 1;
+			}
+		}
+		if (BG1.num_grid_y != 1) && (cell_y_num[c] != 1)
+		{
+			for (int c1 = 0; c1 < Bed.particle_count; ++c1)
+			{
+				neighbor_particles[counter] = c1 + c*1000;
+				counter = counter + 1;
+			}
+		}
+		if (BG1.num_grid_z != 1) && (cell_z_num[c] != 1)
+		{
+			for (int c1 = 0; c1 < Bed.particle_count; ++c1)
+			{
+				neighbor_particles[counter] = c1 + c*1000;
+				counter = counter + 1;
+			}
+		}
+		// Performing the relocation of particles to reach a stable position
 		for (int k = 0; k < 600; ++k)
 		{
 			for (int i = 0; i < Bed.particle_count; ++i)
@@ -58,40 +80,63 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				y_particle_middle = 0.0;
 				z_particle_middle = 0.0;
 				
-				for (int j = 0; j < Bed.particle_count; ++j)
+				for (int j = 0; j < 4*Bed.particle_count; ++j)
 				{
-					if (j != i)
+					if (j < Bed.particle_count)
 					{
-						if ((Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0) > sqrt(pow(Bed.x_particles[i] - Bed.x_particles[j], 2) + pow(Bed.y_particles[i] - Bed.y_particles[j], 2) + pow(Bed.z_particles[i] - Bed.z_particles[j], 2)))
+						if (j != i)
+						{
+							if ((Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0) > sqrt(pow(Bed.x_particles[c][i] - Bed.x_particles[c][j], 2) + pow(Bed.y_particles[c][i] - Bed.y_particles[c][j], 2) + pow(Bed.z_particles[c][i] - Bed.z_particles[c][j], 2)))
+							{
+								q = q + 1;
+								x_particle_middle = x_particle_middle + Bed.x_particles[c][j] + (Bed.x_particles[c][i] - Bed.x_particles[c][j])*(Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0)/sqrt(pow((Bed.x_particles[c][i] - Bed.x_particles[c][j]),2) + pow((Bed.y_particles[c][i] - Bed.y_particles[c][j]),2) + pow((Bed.z_particles[c][i] - Bed.z_particles[c][j]),2));
+								y_particle_middle = y_particle_middle + Bed.y_particles[c][j] + (Bed.y_particles[c][i] - Bed.y_particles[c][j])*(Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0)/sqrt(pow((Bed.x_particles[c][i] - Bed.x_particles[c][j]),2) + pow((Bed.y_particles[c][i] - Bed.y_particles[c][j]),2) + pow((Bed.z_particles[c][i] - Bed.z_particles[c][j]),2));
+								z_particle_middle = z_particle_middle + Bed.z_particles[c][j] + (Bed.z_particles[c][i] - Bed.z_particles[c][j])*(Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0)/sqrt(pow((Bed.x_particles[c][i] - Bed.x_particles[c][j]),2) + pow((Bed.y_particles[c][i] - Bed.y_particles[c][j]),2) + pow((Bed.z_particles[c][i] - Bed.z_particles[c][j]),2));
+							}
+						}
+					}
+					else
+					{
+						neighbor_cell = floor(neighbor_particles[j]/1000.0);
+						neighbor_part = remainder(neighbor_particles[j], 1000);
+						if ((Bed.d_particles[i]/2.0 + Bed.d_particles[neighbor_part]/2.0) > sqrt(pow(Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part], 2) + pow(Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part], 2) + pow(Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part], 2)))
 						{
 							q = q + 1;
-							x_particle_middle = x_particle_middle + Bed.x_particles[j] + (Bed.x_particles[i] - Bed.x_particles[j])*(Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0)/sqrt(pow((Bed.x_particles[i] - Bed.x_particles[j]),2) + pow((Bed.y_particles[i] - Bed.y_particles[j]),2) + pow((Bed.z_particles[i] - Bed.z_particles[j]),2));
-							y_particle_middle = y_particle_middle + Bed.y_particles[j] + (Bed.y_particles[i] - Bed.y_particles[j])*(Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0)/sqrt(pow((Bed.x_particles[i] - Bed.x_particles[j]),2) + pow((Bed.y_particles[i] - Bed.y_particles[j]),2) + pow((Bed.z_particles[i] - Bed.z_particles[j]),2));
-							z_particle_middle = z_particle_middle + Bed.z_particles[j] + (Bed.z_particles[i] - Bed.z_particles[j])*(Bed.d_particles[i]/2.0 + Bed.d_particles[j]/2.0)/sqrt(pow((Bed.x_particles[i] - Bed.x_particles[j]),2) + pow((Bed.y_particles[i] - Bed.y_particles[j]),2) + pow((Bed.z_particles[i] - Bed.z_particles[j]),2));
+							x_particle_middle = x_particle_middle + Bed.x_particles[neighbor_cell][neighbor_part] + (Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part])*(Bed.d_particles[i]/2.0 + Bed.d_particles[neighbor_part]/2.0)/sqrt(pow((Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part]),2) + pow((Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part]),2) + pow((Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part]),2));
+							y_particle_middle = y_particle_middle + Bed.y_particles[neighbor_cell][neighbor_part] + (Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part])*(Bed.d_particles[i]/2.0 + Bed.d_particles[neighbor_part]/2.0)/sqrt(pow((Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part]),2) + pow((Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part]),2) + pow((Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part]),2));
+							z_particle_middle = z_particle_middle + Bed.z_particles[neighbor_cell][neighbor_part] + (Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part])*(Bed.d_particles[i]/2.0 + Bed.d_particles[neighbor_part]/2.0)/sqrt(pow((Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part]),2) + pow((Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part]),2) + pow((Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part]),2));
 						}
 					}
 				}
 
 				if (q >= 1)
 				{
-					Bed.x_particles[i] = x_particle_middle/q;
-					Bed.y_particles[i] = y_particle_middle/q;
-					Bed.z_particles[i] = z_particle_middle/q;
-				}
+					Bed.x_particles[c][i] = x_particle_middle/q;
+					Bed.y_particles[c][i] = y_particle_middle/q;
+					Bed.z_particles[c][i] = z_particle_middle/q;
 
-				//Don't accept if the new location is outside boundary
-				if (Bed.xparticles[i] < Bed.rparticles[i])
-					Bed.xparticles[i] = Bed.rparticles[i];
-				if (Bed.xparticles[i] > (Bed.xel - Bed.rparticles[i]))
-					Bed.xparticles[i] = Bed.xel - Bed.rparticles[i];
-				if (Bed.yparticles[i] < Bed.rparticles[i])
-					Bed.yparticles[i] = Bed.rparticles[i];
-				if (Bed.yparticles[i] > (Bed.yel - Bed.rparticles[i]))
-					Bed.yparticles[i] = Bed.yel - Bed.rparticles[i];
-				if (Bed.zparticles[i] < Bed.rparticles[i])
-					Bed.zparticles[i] = Bed.rparticles[i];
-				if (Bed.zparticles[i] > (Bed.zel - Bed.rparticles[i]))
-					Bed.zparticles[i] = Bed.zel - Bed.rparticles[i];
+					// Particles can't go over the overall boundaries of the bed
+					if (cell_x_num[c] == BG1.num_grid_x) && (Bed.x_particles[c][i] >= (BG1.grid_x*cell_x_num[c] - Bed.d_particles[i]/2.0))
+						Bed.x_particles[c][i] = (BG1.grid_x - Bed.d_particles[i]/2.0);
+					if (cell_y_num[c] == BG1.num_grid_y) && (Bed.y_particles[c][i] >= (BG1.grid_y*cell_y_num[c] - Bed.d_particles[i]/2.0))
+						Bed.y_particles[c][i] = (BG1.grid_y - Bed.d_particles[i]/2.0);
+/*					if (cell_z_num[c] == BG1.num_grid_z) && (Bed.z_particles[c][i] >= (BG1.grid_z*cell_z_num[c] - Bed.d_particles[i]/2.0))
+						Bed.z_particles[c][i] = (BG1.grid_z - Bed.d_particles[i]/2.0);*/
+					// Particles can't go below a certain amount of the previous cell
+					if (Bed.x_particles[c][i] <= (0.9*BG1.grid_x*(cell_x_num[c] - 1.0) + Bed.d_particles[i]/2.0))
+						Bed.x_particles[c][i] = (0.9*BG.grid_x*(cell_x_num[c] - 1.0) + Bed.d_particles[i]/2.0);
+					if (Bed.y_particles[c][i] <= (0.9*BG1.grid_y*(cell_y_num[c] - 1.0) + Bed.d_particles[i]/2.0))
+						Bed.y_particles[c][i] = (0.9*BG.grid_y*(cell_y_num[c] - 1.0) + Bed.d_particles[i]/2.0);
+					if (Bed.z_particles[c][i] <= (0.9*BG1.grid_z*(cell_z_num[c] - 1.0) + Bed.d_particles[i]/2.0))
+						Bed.z_particles[c][i] = (0.9*BG.grid_z*(cell_z_num[c] - 1.0) + Bed.d_particles[i]/2.0);
+					// Particles can't go below the general size of the bed
+					if (cell_x_num[c] == 1) && (Bed.x_particles[c][i] <= (BG1.grid_x*(cell_x_num[x] - 1) + Bed.d_particles[i]/2.0))
+						Bed.x_particles[c][i] = Bed.d_particles[i]/2.0;
+					if (cell_y_num[c] == 1) && (Bed.y_particles[c][i] <= (BG1.grid_y*(cell_y_num[x] - 1) + Bed.d_particles[i]/2.0))
+						Bed.y_particles[c][i] = Bed.d_particles[i]/2.0;
+					if (cell_z_num[c] == 1) && (Bed.z_particles[c][i] <= (BG1.grid_z*(cell_z_num[x] - 1) + Bed.d_particles[i]/2.0))
+						Bed.z_particles[c][i] = Bed.d_particles[i]/2.0;
+				}
 			}
 		}
 	}
