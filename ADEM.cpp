@@ -6,6 +6,8 @@
 #include <math.h>
 #include <typeinfo>
 #include <vector>
+#include <algorithm>
+#include <cstring>
 
 using namespace std;
 
@@ -38,7 +40,7 @@ int main()
 
 	BG.num_grid_x = int(BG.bed_x/BG.grid_x);		// Number of grids in x-direction
 	BG.num_grid_y = int(BG.bed_y/BG.grid_y);		// Number of grids in y-direction
-	BG.num_grid_z = int(BG.bed_z/BG.grid_z);		// Number of grids in z-direction
+	BG.num_grid_z = int(BG.layer_thickness/BG.grid_z);		// Number of grids in z-direction
 
 	static int num_grid = BG.num_grid_x*BG.num_grid_y*BG.num_grid_z;	// Total number of grids in the bed
 	BG.num_grid = num_grid;
@@ -48,34 +50,30 @@ int main()
 	/* Powder packing properties */
 	ParticleChar PC1;	// Loading the powder packing data structre from SLS.h
 
-	PC1.avgrd = 15.0/1000.0;		// Average diameter of particles inside the packing
-	PC1.stddev = 5.0/1000.0;		// Standard deviation of the particles inside packing
+	PC1.avgrd = 7.5/1000.0;		// Average diameter of particles inside the packing
+	PC1.stddev = 2.5/1000.0;		// Standard deviation of the particles inside packing
 	PC1.packfrac = 0.63;	// Packing fraction of the bed
-	PC1.nmin = BG.grid_volume/((4.0/3.0)*4.0*atan(1.0)*pow(((PC1.avgrd)/2.0), 3.0));		// Minimum number of particles inside each grid
+	PC1.nmin = BG.grid_volume/((4.0/3.0)*4.0*atan(1.0)*pow((PC1.avgrd), 3.0));		// Minimum number of particles inside each grid
 
 	/* Finding out the number of powders inside each grid */
-	float* p_d;
-	p_d = DiameterFinder(PC1, BG.grid_volume);
+	float* p_r;
+	p_r = RadiusFinder(PC1, BG.grid_volume);
 
-	static int num_particle_grid = int(p_d[0]);
+	static int num_particle_grid = int(p_r[0]);
 
 	// Creating the new array for particle diameters
-	float particle_diameter[num_particle_grid];
+	float particle_radius[num_particle_grid];
 	for (int i = 0; i < num_particle_grid; ++i)
 	{
-		particle_diameter[i] = p_d[i + 1];
+		particle_radius[i] = p_r[i + 1];
 	}
-
 	// Set the powder bed structure lol
 	PowderBed PB;
+
 	PB.particle_count = num_particle_grid;
-	for (int i = 0; i < num_particle_grid; ++i)
-	{
-		PB.d_particles[i] = particle_diameter[i];
-	}
+	memcpy(PB.r_particles, particle_radius, sizeof(particle_radius));
 
 	// Initialize the arrays of particle locations and their neighbors
-
 	PB = PackingGenerator(PC1, BG, PB);
 
 	/* Making up the powder bed */

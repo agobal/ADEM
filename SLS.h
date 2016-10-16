@@ -2,7 +2,7 @@ struct PowderBed{
 	float x_particles[100][110];
 	float y_particles[100][110];
 	float z_particles[100][110];
-	float d_particles[100][110];
+	float r_particles[110];
 	int neighbors[100][110][15];
 	int particle_count;
 };
@@ -98,7 +98,7 @@ ElementEdge EdgeFinder(struct PowderBed PB);*/
 
 // int* CornerLocator(struct PowderBed PB, struct SPowderBed SPB);
 
-float* DiameterFinder(struct ParticleChar PC, float grid_volume);
+float* RadiusFinder(struct ParticleChar PC, float grid_volume);
 
 // float** PsiGenerator(struct PowderBed PB, struct ElementEdge);
 
