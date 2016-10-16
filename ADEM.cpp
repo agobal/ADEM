@@ -25,8 +25,8 @@ int main()
 	BedGeometry BG;
 	/* Powder bed dimensions and layer thickness (all in milimeters) */
 
-	BG.bed_x = 1.0;
-	BG.bed_y = 1.0;
+	BG.bed_x = 0.2;
+	BG.bed_y = 0.2;
 	BG.bed_z = 2.0;
 	BG.layer_thickness = 0.05;
 
@@ -75,7 +75,8 @@ int main()
 
 	// Initialize the arrays of particle locations and their neighbors
 	PB = PackingGenerator(PC1, BG, PB);
-
+	for (int i = 0; i < 10; ++i)
+		cout << PB.x_particles[i][i] << endl;
 	/* Making up the powder bed */
 	// PB = PackingGenerator(PC1, particle_diameter, );	// Generating the desired packing 
 

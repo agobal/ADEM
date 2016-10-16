@@ -23,21 +23,22 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 	int cell_x_num[BG1.num_grid], cell_y_num[BG1.num_grid], cell_z_num[BG1.num_grid];	// Number of the cell grid in x, y and z directions
 	for (int i = 0; i < BG1.num_grid; ++i)
 	{
-		cell_x_num[i] = remainder(i - 1, BG1.num_grid_x) + 1;
-		cell_y_num[i] = floor( remainder( (i - 1), (BG1.num_grid_x*BG1.num_grid_y) )/BG1.num_grid_x ) + 1;
-		cell_z_num[i] = floor( (i - 1)/(BG1.num_grid_x*BG1.num_grid_y) ) + 1;
+		cell_x_num[i] = abs(remainder(i, BG1.num_grid_x)) + 1;
+		cell_y_num[i] = abs(remainder(i, (BG1.num_grid_x*BG1.num_grid_y) ))/BG1.num_grid_x + 1;
+		cell_z_num[i] = floor(i/(BG1.num_grid_x*BG1.num_grid_y) ) + 1;
+		cout << i << " " << cell_x_num[i] << " " << cell_y_num[i] << " " << cell_z_num[i] << endl;
 		for (int j = 0; j < PB.particle_count; ++j)
 		{
-			Bed.x_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_x - Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_x_num[i] - 1))*BG1.grid_x;
-			Bed.y_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_y - Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_y_num[i] - 1))*BG1.grid_y;
-			Bed.z_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_z - Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_z_num[i] - 1))*BG1.grid_z;
+			Bed.x_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_x - 2.0*Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_x_num[i] - 1))*BG1.grid_x;
+			Bed.y_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_y - 2.0*Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_y_num[i] - 1))*BG1.grid_y;
+			Bed.z_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_z - 2.0*Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_z_num[i] - 1))*BG1.grid_z;
 		}
 	}
 
 	float q, x_particle_middle, y_particle_middle, z_particle_middle;
 	int counter, neighbor_part, neighbor_cell;
 	// Relocate particles to reduce overlaps
-	for (int c = 0; c < BG1.num_grid; ++c)
+/*	for (int c = 0; c < BG1.num_grid; ++c)
 	{
 		cout<<c<<endl;
 		// Filling out the neighboring particle numbers for relocation
@@ -143,6 +144,6 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				}
 			}
 		}
-	}
+	}*/
 	return Bed;
 }
