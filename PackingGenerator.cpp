@@ -39,9 +39,12 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 	// Relocate particles to reduce overlaps
 	for (int c = 0; c < BG1.num_grid; ++c)
 	{
+		cout<<c<<endl;
 		// Filling out the neighboring particle numbers for relocation
 		float neighbor_particles[4*Bed.particle_count];
 		counter = 0;
+		for (int ct = 0; ct < 4*Bed.particle_count; ++ct)
+			neighbor_particles[ct] = 0;
 		for (int c1 = 0; c1 < Bed.particle_count; ++c1)
 		{
 			neighbor_particles[counter] = c1;
@@ -80,7 +83,7 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				x_particle_middle = 0.0;
 				y_particle_middle = 0.0;
 				z_particle_middle = 0.0;
-				
+
 				for (int j = 0; j < 4*Bed.particle_count; ++j)
 				{
 					if (j < Bed.particle_count)
@@ -98,7 +101,7 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 					}
 					else
 					{
-						neighbor_cell = floor(neighbor_particles[j]/1000);
+						neighbor_cell = (neighbor_particles[j]/1000);
 						neighbor_part = remainder(neighbor_particles[j], 1000);
 						if ((Bed.r_particles[i] + Bed.r_particles[neighbor_part]) > sqrt(pow(Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part], 2) + pow(Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part], 2) + pow(Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part], 2)))
 						{

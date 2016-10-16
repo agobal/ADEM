@@ -69,8 +69,8 @@ int main()
 	}
 	// Set the powder bed structure lol
 	PowderBed PB;
-
 	PB.particle_count = num_particle_grid;
+	cout<<PB.particle_count<<endl;
 	memcpy(PB.r_particles, particle_radius, sizeof(particle_radius));
 
 	// Initialize the arrays of particle locations and their neighbors
