@@ -163,6 +163,42 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				}
 			}
 		}
+		// Find neighbors of particles
+		int q2;
+		for (int i = 0; i < Bed.particle_count; ++i)
+		{
+			q2 = 0;
+			for (int j = 0; j < 4*Bed.particle_count; ++j)
+			{
+				// For particles in the same cell
+				if (j < Bed.particle_count)
+				{
+					if (j != i)
+					{
+						if (abs(Bed.r_particles[i] + Bed.r_particles[j] - sqrt(pow(Bed.x_particles[c][i] - Bed.x_particles[c][j], 2.0) + pow(Bed.y_particles[c][i] - Bed.y_particles[c][j], 2.0) + pow(Bed.z_particles[c][i] - Bed.z_particles[c][j], 2.0))) < 0.000001)
+						{
+							Bed.neighbors[c][i][q2] = j;
+							q2 = q2 + 1;
+						}
+					}
+				}
+				// For particles in the adjacent cells
+				else
+				{
+					neighbor_cell = (neighbor_particles[j]/1000) - 1; // Because the total cell count starts from 0 and xyz count starts from 1
+					if (neighbor_cell != 0)
+						neighbor_part = (neighbor_particles[j] % (neighbor_cell*1000));
+					if ((neighbor_cell != 0) && (neighbor_part != 0))
+					{
+						if (abs(Bed.r_particles[i] + Bed.r_particles[neighbor_part] - sqrt(pow(Bed.x_particles[c][i] - Bed.x_particles[neighbor_cell][neighbor_part], 2.0) + pow(Bed.y_particles[c][i] - Bed.y_particles[neighbor_cell][neighbor_part], 2.0) + pow(Bed.z_particles[c][i] - Bed.z_particles[neighbor_cell][neighbor_part], 2.0))) < 0.000001)
+						{
+							Bed.neighbors[c][i][q2] = neighbor_particles[j];
+							q2 = q2 + 1;
+						}
+					}
+				}
+			}
+		}
 	}
 	return Bed;
 }

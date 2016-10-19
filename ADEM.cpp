@@ -70,13 +70,13 @@ int main()
 	// Set the powder bed structure lol
 	PowderBed PB;
 	PB.particle_count = num_particle_grid;
-	cout<<PB.particle_count<<endl;
+
+	// Copy the particle radii to the class
 	memcpy(PB.r_particles, particle_radius, sizeof(particle_radius));
 
-	// Initialize the arrays of particle locations and their neighbors
+	// Populate the powder bed properties class
 	PB = PackingGenerator(PC1, BG, PB);
-	for (int i = 0; i < 10; ++i)
-		cout << PB.x_particles[i][i] << endl;
+	
 	/* Making up the powder bed */
 	// PB = PackingGenerator(PC1, particle_diameter, );	// Generating the desired packing 
 
