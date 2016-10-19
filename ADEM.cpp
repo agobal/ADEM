@@ -50,7 +50,7 @@ int main()
 	/* Powder packing properties */
 	ParticleChar PC1;	// Loading the powder packing data structre from SLS.h
 
-	PC1.avgrd = 7.5/1000.0;		// Average diameter of particles inside the packing
+	PC1.avgrd = 15/1000.0;		// Average diameter of particles inside the packing
 	PC1.stddev = 2.5/1000.0;		// Standard deviation of the particles inside packing
 	PC1.packfrac = 0.63;	// Packing fraction of the bed
 	PC1.nmin = BG.grid_volume/((4.0/3.0)*4.0*atan(1.0)*pow((PC1.avgrd), 3.0));		// Minimum number of particles inside each grid
