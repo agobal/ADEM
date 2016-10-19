@@ -28,7 +28,7 @@ int main()
 	BG.bed_x = 0.2;
 	BG.bed_y = 0.2;
 	BG.bed_z = 2.0;
-	BG.layer_thickness = 0.05;
+	BG.layer_thickness = 0.1;
 
 	/* Grid size and number of grids (all in milimeters) */
 

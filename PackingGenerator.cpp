@@ -23,34 +23,41 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 	int cell_x_num[BG1.num_grid], cell_y_num[BG1.num_grid], cell_z_num[BG1.num_grid];	// Number of the cell grid in x, y and z directions
 	for (int i = 0; i < BG1.num_grid; ++i)
 	{
+		// Assigning cell grid numbering (starts from 1 unlike the total cell number which starts from 0)
 		cell_x_num[i] = (i % BG1.num_grid_x) + 1;
 		cell_y_num[i] = (i % (BG1.num_grid_x*BG1.num_grid_y))/BG1.num_grid_x + 1;
 		cell_z_num[i] = floor(i/(BG1.num_grid_x*BG1.num_grid_y) ) + 1;
-		cout << i << " " << cell_x_num[i] << " " << cell_y_num[i] << " " << cell_z_num[i] << endl;
+		// cout << i << " " << cell_x_num[i] << " " << cell_y_num[i] << " " << cell_z_num[i] << endl;	//Uncomment for testing cell numbering
 		for (int j = 0; j < PB.particle_count; ++j)
 		{
+			// Assigning initial random locations to particles
 			Bed.x_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_x - 2.0*Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_x_num[i] - 1))*BG1.grid_x;
 			Bed.y_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_y - 2.0*Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_y_num[i] - 1))*BG1.grid_y;
 			Bed.z_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_z - 2.0*Bed.r_particles[i]) + Bed.r_particles[i] + float((cell_z_num[i] - 1))*BG1.grid_z;
 		}
 	}
 
-	float q, x_particle_middle, y_particle_middle, z_particle_middle;
-	int counter, neighbor_part, neighbor_cell;
+	float q, x_particle_middle, y_particle_middle, z_particle_middle;	// Middle variables for ease of calculations
+	int counter, neighbor_part, neighbor_cell;		// loop counter and variables for determining particle neighbors
+
 	// Relocate particles to reduce overlaps
 	for (int c = 0; c < BG1.num_grid; ++c)
 	{
 		cout<<c<<endl;
-		// Filling out the neighboring particle numbers for relocation
+		// Filling out the neighboring particle numbers for relocation purposes
+		// Neighboring list consists of 4 cell groups for the cell itself plus neighbors in x, y, z directions behind it
 		int neighbor_particles[4*Bed.particle_count];
 		counter = 0;
+		// Initiating the neighboring particles array
 		for (int ct = 0; ct < 4*Bed.particle_count; ++ct)
 			neighbor_particles[ct] = 0;
+		// Adding the particles inside cell to the neighboring list
 		for (int c1 = 0; c1 < Bed.particle_count; ++c1)
 		{
 			neighbor_particles[counter] = c1;
 			counter = counter + 1;
 		}
+		// Adding the particles in the cell behind to neighboring list (x)
 		if ((BG1.num_grid_x != 1) && (cell_x_num[c] != 1))
 		{
 			for (int c1 = 0; c1 < Bed.particle_count; ++c1)
@@ -59,6 +66,7 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				counter = counter + 1;
 			}
 		}
+		// Adding the particles in the cell behind to neighboring list (y)
 		if ((BG1.num_grid_y != 1) && (cell_y_num[c] != 1))
 		{
 			for (int c1 = 0; c1 < Bed.particle_count; ++c1)
@@ -67,6 +75,7 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				counter = counter + 1;
 			}
 		}
+		// Adding the particles in the cell behind to neighboring list (z)
 		if ((BG1.num_grid_z != 1) && (cell_z_num[c] != 1))
 		{
 			for (int c1 = 0; c1 < Bed.particle_count; ++c1)
@@ -75,9 +84,10 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 				counter = counter + 1;
 			}
 		}
-		for (int ct = 0; ct < 4*Bed.particle_count; ++ct)
+/*		for (int ct = 0; ct < 4*Bed.particle_count; ++ct)
 			cout << neighbor_particles[ct] << " ";
-		cout << endl;
+		cout << endl;*/		//Uncomment for testing particle locations
+
 		// Performing the relocation of particles to reach a stable position
 		for (int k = 0; k < 600; ++k)
 		{
@@ -90,6 +100,7 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 
 				for (int j = 0; j < 4*Bed.particle_count; ++j)
 				{
+					// For particles in the same cell
 					if (j < Bed.particle_count)
 					{
 						if (j != i)
@@ -103,6 +114,7 @@ PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struc
 							}
 						}
 					}
+					// For particles in the adjacent cells
 					else
 					{
 						neighbor_cell = (neighbor_particles[j]/1000) - 1; // Because the total cell count starts from 0 and xyz count starts from 1
