@@ -5,11 +5,13 @@ struct PowderBed{
 	float r_particles[130];
 	int neighbors[8][130][15];
 	int particle_count;
+	int cell_count;
 };
 
 struct TempProfile{
 	float T[8][130];
-}
+	float E[8][130];
+};
 
 struct SPowderBed{
 	float x_particles[800];
@@ -67,6 +69,7 @@ struct ElementEdge{
 	int yfzf[15];
 };
 
+	extern float preheat_temperature;
 	extern float solid_conductivity;
 	extern float air_conductivity;
 	extern float Youngs_modulus;
