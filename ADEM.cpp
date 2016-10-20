@@ -70,6 +70,7 @@ int main()
 	// Set the powder bed structure lol
 	PowderBed PB;
 	PB.particle_count = num_particle_grid;
+	PB.cell_count = BG.num_grid;
 
 	// Copy the particle radii to the class
 	memcpy(PB.r_particles, particle_radius, sizeof(particle_radius));
@@ -78,6 +79,7 @@ int main()
 	PB = PackingGenerator(PC1, BG, PB);
 
 	// Function for heat transfer analysis
+	TempProfile TP;
 	TP = LaserSintering(PB);
 	
 	/* Making up the powder bed */
