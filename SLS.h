@@ -7,6 +7,10 @@ struct PowderBed{
 	int particle_count;
 };
 
+struct TempProfile{
+	float T[8][130];
+}
+
 struct SPowderBed{
 	float x_particles[800];
 	float y_particles[800];
@@ -89,6 +93,8 @@ struct ElementEdge{
 	extern float mass;
 
 PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
+
+TempProfile LaserSintering(struct PowderBed PB);
 
 /*SPowderBed SmallPackingGenerator(struct PowderBed Struct);
 
