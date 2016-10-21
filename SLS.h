@@ -95,7 +95,8 @@ struct ElementEdge{
 	extern float evaporation_temperature;
 	extern float mass;
 
-PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
+// PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
+PowderBed PackingGenerator(ParticleChar, BedGeometry, PowderBed);
 
 TempProfile LaserSintering(struct PowderBed PB);
 
