@@ -77,18 +77,10 @@ int main()
 
 	// Populate the powder bed properties class
 	PB = PackingGenerator(PC1, BG, PB);
-	for (int i = 0; i < PB.cell_count; ++i)
-	{
-		for (int j = 0; j < PB.particle_count; ++j)
-		{
-			cout << PB.x_particles[i][j] << " ";
-		}
-		cout << endl;
-	}
+
 	// Function for heat transfer analysis
 	TempProfile TP;
 	TP = LaserSintering(PB);
-	
 
 	/* Making up the powder bed */
 	// PB = PackingGenerator(PC1, particle_diameter, );	// Generating the desired packing 
