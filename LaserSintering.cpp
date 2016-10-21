@@ -24,6 +24,14 @@ TempProfile LaserSintering(struct PowderBed PB)
 			TP.E[i][j] = TP.T[i][j]*particle_heat_capacity;
 		}
 	}
+
+	// Assign the simulation timestep (seconds)
+	float delta_t = 0.00001;
+	LaserPath LP;
+	LP = GcodeReader(delta_t);
+	
+	// Finding laser path and total number of required time steps and laser location at each time by reading the gcode
+
 	return TP;
 }
 
