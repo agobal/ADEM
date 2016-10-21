@@ -8,18 +8,10 @@
 
 using namespace std;
 
-// PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB)
+
 PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 {
-/*	PowderBed Bed;
 
-	// Add the particle size distribution to the new struct
-	Bed.particle_count = PB.particle_count;
-	for (int i = 0; i < PB.particle_count; ++i)
-	{
-		Bed.r_particles[i] = PB.r_particles[i];
-	}
-*/
 	// Assign random locations to particles
 	int cell_x_num[BG1.num_grid], cell_y_num[BG1.num_grid], cell_z_num[BG1.num_grid];	// Number of the cell grid in x, y and z directions
 	for (int i = 0; i < BG1.num_grid; ++i)
@@ -201,5 +193,6 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 			}
 		}
 	}
+	// Can't input a struct to a function and return the same one with a different name
 	return PB;
 }
