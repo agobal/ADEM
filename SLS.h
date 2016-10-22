@@ -15,6 +15,7 @@ struct TempProfile{
 
 struct LaserPath{
 	int time_steps;
+	float laser_speed;
 	float x_laser[10000];
 	float y_laser[10000];
 };
