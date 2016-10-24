@@ -23,21 +23,29 @@ LaserPath GcodeReader(float delta_t)
 	// First read the gcode provided by user
 	ifstream gcode("gcode.txt");
 	string str; 
-	string s;
-	while (getline(gcode, str))
+	int q;
+	q = 0;
+	while(getline(gcode, str))
 	{
-		istringstream iss(str);
-		while (iss >> s)
+		if (q == 0)
 		{
-			string mid = s[0];
-			if (mid == "V")
-			{
-				// LP.laser_speed = atof(s.erase(0, 1));
-				cout << s.erase(0, 1) << endl;
-			}
+			LP.laser_speed = atof(str.c_str());;
 		}
+		q = q + 1;
+		// cout << str << endl;
 	}
 	gcode.close();
+
+	float distance = sqrt(pow(0.0002 - 0.000, 2) + pow(0.0002 - 0.0002, 2));
+	LP.time_steps = int((distance/(LP.laser_speed))/(delta_t));
+
+	LP.x_laser[0] = 0;
+	LP.y_laser[0] = 0.0002;
+	for (int i = 1; i < LP.time_steps; ++i)
+	{
+		LP.x_laser[i] = LP.x_laser[i - 1] + (0.0002 - 0.000)/(float(LP.time_steps));
+		LP.y_laser[i] = LP.y_laser[i - 1] + (0.0002 - 0.0002)/(float(LP.time_steps));
+	}
 	return LP;
 
 }

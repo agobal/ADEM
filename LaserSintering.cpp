@@ -15,6 +15,7 @@ TempProfile LaserSintering(struct PowderBed PB)
 	float solid_heat_capacity = 40;
 	float particle_heat_capacity;
 	float preheat_temperature = 500;
+	// Initializing temperatures for all particles inside the powder bed
 	for (int i = 0; i < PB.cell_count; ++i)
 	{
 		for (int j = 0; j < PB.particle_count; ++j)
@@ -28,9 +29,10 @@ TempProfile LaserSintering(struct PowderBed PB)
 	// Assign the simulation timestep (seconds)
 	float delta_t = 0.00001;
 	LaserPath LP;
-	LP = GcodeReader(delta_t);
-	
 	// Finding laser path and total number of required time steps and laser location at each time by reading the gcode
+	LP = GcodeReader(delta_t);
+
+	// Solving the actual laser sintering equations
 
 	return TP;
 }
