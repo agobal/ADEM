@@ -33,8 +33,8 @@ TempProfile LaserSintering(struct PowderBed PB)
 	LP = GcodeReader(delta_t);
 
 	// Solving the actual laser sintering equations
-	float K;	// Heat transfer coefficient between two particles in contact
-	int neigh;	// Middle parameter for setting the neighboring particle
+	float K, Q;	// Heat transfer coefficient between two particles in contact
+	int neigh, cell2;	// Middle parameter for setting the neighboring particle
 	for (int t = 0; t < LP.time_steps; ++t)
 	{
 		for (int cell = 0; cell < PB.cell_count; ++cell)
@@ -44,7 +44,7 @@ TempProfile LaserSintering(struct PowderBed PB)
 	    		Q = 0;
 				for (int j = 0; j < 15; ++j)
 				{
-					if (PB.neighbors[cell][i][j] ~= 0)
+					if (PB.neighbors[cell][i][j] != 0)
 					{
 						if  (PB.neighbors[cell][i][j] > 1000)
 						{
@@ -54,21 +54,23 @@ TempProfile LaserSintering(struct PowderBed PB)
 						}
 						else
 						{
-							Q = Q + 5*(A_r/A_c)*(4*d_sij*(T(cell, neighbors(cell, i, j), q) - T(cell, i, q))/((1/k_s)+(1/k_s))) + ...
-	                                5*(A_v/A_c)*(2*k_air*d_sij*(T(cell, neighbors(cell, i, j), q) - T(cell, i, q)));
+							cell2 = (PB.neighbors[cell][i][j]/1000) - 1;
+							if (cell2 != 0)
+								neigh = (PB.neighbors[cell][i][j] % (cell2*1000));
+							K = CondCoeff(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], PB.x_particles[cell2][neigh], PB.y_particles[cell2][neigh], PB.z_particles[cell2][neigh], PB.r_particles[neigh], TP.T[cell][i], TP.T[cell2][neigh]);
+							Q = Q + K*(TP.T[cell][i] - TP.T[cell2][neigh]);
 						}
 					}
-					if ( sqrt( (x(cell, i) - V_c*t)^2 + (y(cell, i) - 0.0005)^2 ) < r_b )
-						I = Laser(x(cell, i), y(cell, i), z(cell, i), t, V_c);
-					else
-						I = 0;
-					S = pi*r(1, i)*r(1, i);
-					Ee(cell, i, q + 1) = Ee(cell, i, q) + (Q + K_ab*S*I)*dt/(rho_s*(4/3)*pi*r(1, i)^3);
-					T(cell, i, q + 1) = Ee(cell, i, q + 1)/C_s;
+					// if ( sqrt( (x(cell, i) - V_c*t)^2 + (y(cell, i) - 0.0005)^2 ) < r_b )
+					// 	I = Laser(x(cell, i), y(cell, i), z(cell, i), t, V_c);
+					// else
+					// 	I = 0;
+					// S = pi*r(1, i)*r(1, i);
+					// Ee(cell, i, q + 1) = Ee(cell, i, q) + (Q + K_ab*S*I)*dt/(rho_s*(4/3)*pi*r(1, i)^3);
+					// T(cell, i, q + 1) = Ee(cell, i, q + 1)/C_s;
 				}
 			}
 		}
-		q = q + 1;
 	}
 
 	return TP;
