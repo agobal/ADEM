@@ -16,8 +16,8 @@ struct TempProfile{
 struct LaserPath{
 	int time_steps;
 	float laser_speed;
-	float x_laser[10000];
-	float y_laser[10000];
+	float x_laser[100000];
+	float y_laser[100000];
 };
 
 struct SPowderBed{
@@ -126,3 +126,6 @@ float* RadiusFinder(struct ParticleChar PC, float grid_volume);
 // float** ElementStiffness(float* Ge, float** Ke);
 
 // void OutputWriter(PowderBed);
+
+// Function for calculating the heat transfer coefficient between two particles based on their position and temperatures
+float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, float z2, float r2, float T1, float T2);
