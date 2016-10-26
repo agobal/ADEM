@@ -15,6 +15,6 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 {
 	// This function calculates the heat conduction coefficient between two powder particles based on their location and temperatures
 	float K;
-	K = 1.0;
+	K = 10.0;
 	return K;
 }
