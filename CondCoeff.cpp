@@ -51,7 +51,9 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 	float k_b = 1.38064852*pow(10, -23); // Boltzmann constant
 
 	float D_b = (D_gDelta_g*omega)/(k_b*T1); // Effective diffusion coefficient
-	float F_n = (4.0*atan(1)*pow(r_c, 4))/(8*D_b);
+	float v_n = (8*D_b*gamma_s)/(pow(r_c, 4))*(4*r_eq*(1 - cos(psi/2)) + r_c*sin(psi/2));
+	// float F_n = (4.0*atan(1)*pow(r_c, 4))/(8*D_b)*v_n - 4.0*atan(1)*gamma_s*(4*r_eq*(1 - cos(psi/2)) + r_c*sin(psi/2));
+	float r_c_dot = -r_eq*v_n/r_c; // temporal change in r_c
 
 
 	float h_e = (1.55*m*k/sigma)*pow((P*1.41)/(E_prime*m) , 0.94);
