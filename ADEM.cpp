@@ -154,7 +154,7 @@ int main()
 
 	// Function for heat transfer analysis
 	TempProfile TP;
-	TP = LaserSintering(PB);
+	TP = LaserSintering(PB, PB_BIG);
 
 	/* Making up the powder bed */
 	// PB = PackingGenerator(PC1, particle_diameter, );	// Generating the desired packing 
