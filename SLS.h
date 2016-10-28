@@ -1,16 +1,18 @@
 struct PowderBed{
-	float x_particles[8][130];
-	float y_particles[8][130];
-	float z_particles[8][130];
+	float x_particles[200][130];
+	float y_particles[200][130];
+	float z_particles[200][130];
 	float r_particles[130];
-	int neighbors[8][130][15];
+	int neighbors[200][130][20];
 	int particle_count;
 	int cell_count;
 };
 
 struct TempProfile{
-	float T[8][130];
-	float E[8][130];
+	float T[200][130];
+	float T_temp[200][130];
+	float E[200][130];
+	float E_temp[200][130];
 };
 
 struct LaserPath{
@@ -76,31 +78,7 @@ struct ElementEdge{
 	int yfzf[15];
 };
 
-	extern float preheat_temperature;
-	extern float solid_conductivity;
-	extern float air_conductivity;
-	extern float Youngs_modulus;
-	extern float Poissons_ratio;
-	extern float E_prime;
-	extern float outside_pressure;
-	extern float average_particle_radius;
-	extern float F;
-	extern float M;
-	extern float contact_radius;
-	extern float contact_diameter;
-	extern float center_distance;
-	extern float contact_area;
-	extern float solid_contact_area;
-	extern float air_contact_area;
-	extern float solid_heat_capacity;
-	extern float liquid_heat_capacity;
-	extern float solid_density;
-	extern float liquid_density;
-	extern float melting_specific_heat;
-	extern float evaporation_specific_heat;
-	extern float melting_temperature;
-	extern float evaporation_temperature;
-	extern float mass;
+
 
 // PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
 PowderBed PackingGenerator(ParticleChar, BedGeometry, PowderBed);
@@ -129,3 +107,6 @@ float* RadiusFinder(struct ParticleChar PC, float grid_volume);
 
 // Function for calculating the heat transfer coefficient between two particles based on their position and temperatures
 float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, float z2, float r2, float T1, float T2);
+
+// Function for calculating the laser beam powder for a certain particle
+float LaserBeam(float x_p, float y_p, float z_p, float r_p, float v_l, float x_l, float y_l);

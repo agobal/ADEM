@@ -36,15 +36,15 @@ LaserPath GcodeReader(float delta_t)
 	}
 	gcode.close();
 
-	float distance = sqrt(pow(0.0002 - 0.000, 2) + pow(0.0002 - 0.0002, 2));
+	float distance = sqrt(pow(0.001 - 0.000, 2) + pow(0.0005 - 0.0005, 2));
 	LP.time_steps = int((distance/(LP.laser_speed))/(delta_t));
 
 	LP.x_laser[0] = 0;
-	LP.y_laser[0] = 0.0002;
+	LP.y_laser[0] = 0.0005;
 	for (int i = 1; i < LP.time_steps; ++i)
 	{
-		LP.x_laser[i] = LP.x_laser[i - 1] + (0.0002 - 0.000)/(float(LP.time_steps));
-		LP.y_laser[i] = LP.y_laser[i - 1] + (0.0002 - 0.0002)/(float(LP.time_steps));
+		LP.x_laser[i] = LP.x_laser[i - 1] + (0.001 - 0.000)/(float(LP.time_steps));
+		LP.y_laser[i] = LP.y_laser[i - 1] + (0.0005 - 0.0005)/(float(LP.time_steps));
 	}
 	return LP;
 

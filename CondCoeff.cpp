@@ -59,6 +59,6 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 	float h_e = (1.55*m*k/sigma)*pow((P*1.41)/(E_prime*m) , 0.94);
 	float h_c = h_e + (A_v/(A_a*sigma))*k_air;
 	float G = h_c*A_a; // Overall heat transfer (in room temperature)
-	float K = 1;
+	float K = G;
 	return K;
 }

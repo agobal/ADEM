@@ -33,10 +33,14 @@ TempProfile LaserSintering(struct PowderBed PB)
 	LP = GcodeReader(delta_t);
 
 	// Solving the actual laser sintering equations
-	float K, Q;	// Heat transfer coefficient between two particles in contact
+	float K, Q, I, S;	// Heat transfer coefficient between two particles in contact
+	float K_ab = 0.3;
+	float rho = 7800;
+	float C_s = 477;
 	int neigh, cell2;	// Middle parameter for setting the neighboring particle
 	for (int t = 0; t < LP.time_steps; ++t)
 	{
+		cout << t << endl;
 		for (int cell = 0; cell < PB.cell_count; ++cell)
 	    {
 	    	for (int i = 0; i < PB.particle_count; ++i)
@@ -61,16 +65,21 @@ TempProfile LaserSintering(struct PowderBed PB)
 							Q = Q + K*(TP.T[cell][i] - TP.T[cell2][neigh]);
 						}
 					}
-					// if ( sqrt( (x(cell, i) - V_c*t)^2 + (y(cell, i) - 0.0005)^2 ) < r_b )
-					// 	I = Laser(x(cell, i), y(cell, i), z(cell, i), t, V_c);
-					// else
-					// 	I = 0;
-					// S = pi*r(1, i)*r(1, i);
-					// Ee(cell, i, q + 1) = Ee(cell, i, q) + (Q + K_ab*S*I)*dt/(rho_s*(4/3)*pi*r(1, i)^3);
-					// T(cell, i, q + 1) = Ee(cell, i, q + 1)/C_s;
+					// Laser power getting into the bed
+					I = LaserBeam(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], LP.laser_speed, LP.x_laser[t], LP.y_laser[t]);
+					S = 4.0*atan(1)*PB.r_particles[i]*PB.r_particles[i];		// Particle surface absorbing the laser powder
+					TP.E[cell][i] = TP.E[cell][i] + (Q + K_ab*S*I)*delta_t/(rho*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[i], 3)); //particle energy increase by laser
+					TP.T_temp[cell][i] = TP.E[cell][i]/C_s;	// Particle temperature change
 				}
 			}
 		}
+		for (int cell = 0; cell < PB.cell_count; ++cell)
+	    {
+	    	for (int i = 0; i < PB.particle_count; ++i)
+	    	{
+	    		TP.T[cell][i] = TP.T_temp[cell][i];
+	    	}
+	    }
 	}
 
 	return TP;
