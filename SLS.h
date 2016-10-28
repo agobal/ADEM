@@ -34,15 +34,20 @@ struct BedGeometry{
 	float bed_y;
 	float bed_z;
 	float layer_thickness;
+	float layer_thickness_big;
 	float bed_volume;
 	float grid_x;
 	float grid_y;
 	float grid_z;
+	float grid_z_big;
 	float grid_volume;
+	float grid_volume_big;
 	int num_grid_x;
 	int num_grid_y;
 	int num_grid_z;
+	int num_grid_z_big;
 	int num_grid;
+	int num_grid_big;
 };
 
 

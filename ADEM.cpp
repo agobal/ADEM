@@ -29,23 +29,33 @@ int main()
 	BG.bed_y = 1.0;
 	BG.bed_z = 2.0;
 	BG.layer_thickness = 0.05;
+	BG.layer_thickness_big = 0.0625;
 
 	/* Grid size and number of grids (all in milimeters) */
 
 	BG.grid_x = 0.1;	// Size of grid-x
 	BG.grid_y = 0.1;	// Size of grid-y
 	BG.grid_z = 0.05;	// Size of grid-z
+	BG.grid_z_big = 0.0625;
 
 	BG.grid_volume = BG.grid_x*BG.grid_y*BG.grid_z;		// Volume of each grid
+	BG.grid_volume_big = BG.grid_x*BG.grid_y*BG.grid_z_big;		// Volume of each grid
 
 	BG.num_grid_x = int(BG.bed_x/BG.grid_x);		// Number of grids in x-direction
 	BG.num_grid_y = int(BG.bed_y/BG.grid_y);		// Number of grids in y-direction
 	BG.num_grid_z = int(BG.layer_thickness/BG.grid_z);		// Number of grids in z-direction
+	BG.num_grid_z_big = int(BG.layer_thickness_big/BG.grid_z_big);		// Number of grids in z-direction
 
 	static int num_grid = BG.num_grid_x*BG.num_grid_y*BG.num_grid_z;	// Total number of grids in the bed
+	static int num_grid_big = BG.num_grid_x*BG.num_grid_y*BG.num_grid_z_big;	// Total number of grids in the bed
 	BG.num_grid = num_grid;
+	BG.num_grid_big = num_grid_big;
 
 	BG.bed_volume = BG.bed_x*BG.bed_y*BG.bed_z;
+
+	//////////////////////////////////////////////////////
+	//////////// Packing of the particle level ///////////
+	//////////////////////////////////////////////////////
 
 	/* Powder packing properties */
 	ParticleChar PC1;	// Loading the powder packing data structre from SLS.h
@@ -55,7 +65,7 @@ int main()
 	PC1.packfrac = 0.63;	// Packing fraction of the bed
 	PC1.nmin = BG.grid_volume/((4.0/3.0)*4.0*atan(1.0)*pow((PC1.avgrd), 3.0));		// Minimum number of particles inside each grid
 
-	/* Finding out the number of powders inside each grid */
+	// Finding out the number of powders inside each grid 
 	float* p_r;
 	p_r = RadiusFinder(PC1, BG.grid_volume);
 
@@ -78,6 +88,70 @@ int main()
 	// Populate the powder bed properties class
 	PB = PackingGenerator(PC1, BG, PB);
 	cout << PB.cell_count << " " << PB.particle_count << endl;
+
+	//////////////////////////////////////////////////////
+	//////////// Packing of the element level ////////////
+	//////////////////////////////////////////////////////
+
+	/* Powder packing properties */
+	ParticleChar PC_BIG;	// Loading the powder packing data structre from SLS.h
+
+	PC_BIG.avgrd = 20/1000.0;		// Average diameter of particles inside the packing
+	PC_BIG.stddev = 5.0/1000.0;		// Standard deviation of the particles inside packing
+	PC_BIG.packfrac = 0.63;	// Packing fraction of the bed
+	PC_BIG.nmin = BG.grid_volume_big/((4.0/3.0)*4.0*atan(1.0)*pow((PC_BIG.avgrd), 3.0));		// Minimum number of particles inside each grid
+	cout << PC_BIG.nmin << endl;
+	/* Finding out the number of powders inside each grid */
+	float* p_r_b;
+	p_r_b = RadiusFinder(PC_BIG, BG.grid_volume_big);
+
+	static int num_big_particle_grid = int(p_r_b[0]);
+	cout << num_big_particle_grid << endl;
+	// Creating the new array for particle diameters
+	float big_particle_radius[num_big_particle_grid];
+	for (int i = 0; i < num_big_particle_grid; ++i)
+	{
+		big_particle_radius[i] = p_r_b[i + 1];
+	}
+	// Set the powder bed structure lol
+	PowderBed PB_BIG;
+	PB_BIG.particle_count = num_big_particle_grid;
+	PB_BIG.cell_count = BG.num_grid_big;
+
+	// Copy the particle radii to the class
+	memcpy(PB_BIG.r_particles, big_particle_radius, sizeof(big_particle_radius));
+
+	// Populate the powder bed properties class
+	PB_BIG = PackingGenerator(PC_BIG, BG, PB_BIG);
+	cout << PB_BIG.cell_count << " " << PB_BIG.particle_count << endl;
+
+	// Find the closest particle to each large element
+	float closest_particle[PB_BIG.cell_count][PB_BIG.particle_count];
+	float mid_dist;
+	for (int cell = 0; cell < PB_BIG.cell_count; ++cell)
+	{
+		for (int i = 0; i < PB_BIG.particle_count; ++i)
+		{
+			mid_dist = 1;
+			for (int cell2 = 0; cell2 < PB.cell_count; ++cell2)
+			{
+				for (int j = 0; j < PB.particle_count; ++j)
+				{
+					if (pow(pow((PB_BIG.x_particles[cell][i] - PB.x_particles[cell2][j]), 2) + pow((PB_BIG.y_particles[cell][i] - PB.y_particles[cell2][j]), 2) + pow((PB_BIG.z_particles[cell][i] - PB.z_particles[cell2][j]), 2), 0.5) < mid_dist)
+					{
+						mid_dist = pow(pow((PB_BIG.x_particles[cell][i] - PB.x_particles[cell2][j]), 2) + pow((PB_BIG.y_particles[cell][i] - PB.y_particles[cell2][j]), 2) + pow((PB_BIG.z_particles[cell][i] - PB.z_particles[cell2][j]), 2), 0.5);
+						closest_particle[cell][i] = cell2*1000 + j;
+					}
+				}
+			}
+		}
+		cout << cell << endl;
+	}
+
+	//////////////////////////////////////////////////////
+	/////////////// Heat transfer analysis ///////////////
+	//////////////////////////////////////////////////////
+
 	// Function for heat transfer analysis
 	TempProfile TP;
 	TP = LaserSintering(PB);
