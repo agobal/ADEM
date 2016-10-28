@@ -1,18 +1,18 @@
 struct PowderBed{
-	float x_particles[200][130];
-	float y_particles[200][130];
-	float z_particles[200][130];
-	float r_particles[130];
-	int neighbors[200][130][20];
+	float x_particles[100][150];
+	float y_particles[100][150];
+	float z_particles[100][150];
+	float r_particles[150];
+	int neighbors[100][150][20];
 	int particle_count;
 	int cell_count;
 };
 
 struct TempProfile{
-	float T[200][130];
-	float T_temp[200][130];
-	float E[200][130];
-	float E_temp[200][130];
+	float T[100][150];
+	float T_temp[100][150];
+	float E[100][150];
+	float E_temp[100][150];
 };
 
 struct LaserPath{
@@ -20,19 +20,6 @@ struct LaserPath{
 	float laser_speed;
 	float x_laser[100000];
 	float y_laser[100000];
-};
-
-struct SPowderBed{
-	float x_particles[800];
-	float y_particles[800];
-	float z_particles[800];
-	float r_particles[800];
-	int neighbors[800][10];
-	int numbers[800];
-	float x_el;
-	float y_el;
-	float z_el;
-	int cnt;
 };
 
 struct ParticleChar{
@@ -58,32 +45,13 @@ struct BedGeometry{
 	int num_grid;
 };
 
-struct ElementCoefficients{
-	float K[8][8];
-	float C[8][8];
-};
-
-struct ElementEdge{
-	int x0y0[15];
-	int x0yf[15];
-	int x0z0[15];
-	int x0zf[15];
-	int xfy0[15];
-	int xfyf[15];
-	int xfz0[15];
-	int xfzf[15];
-	int y0z0[15];
-	int y0zf[15];
-	int yfz0[15];
-	int yfzf[15];
-};
 
 
 
 // PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
 PowderBed PackingGenerator(ParticleChar, BedGeometry, PowderBed);
 
-TempProfile LaserSintering(struct PowderBed PB);
+TempProfile LaserSintering(PowderBed);
 
 LaserPath GcodeReader(float delta_t);
 

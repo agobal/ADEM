@@ -28,7 +28,7 @@ int main()
 	BG.bed_x = 1.0;
 	BG.bed_y = 1.0;
 	BG.bed_z = 2.0;
-	BG.layer_thickness = 0.1;
+	BG.layer_thickness = 0.05;
 
 	/* Grid size and number of grids (all in milimeters) */
 
@@ -77,7 +77,7 @@ int main()
 
 	// Populate the powder bed properties class
 	PB = PackingGenerator(PC1, BG, PB);
-
+	cout << PB.cell_count << " " << PB.particle_count << endl;
 	// Function for heat transfer analysis
 	TempProfile TP;
 	TP = LaserSintering(PB);

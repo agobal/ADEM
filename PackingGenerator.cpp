@@ -36,6 +36,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 	// Relocate particles to reduce overlaps
 	for (int c = 0; c < BG1.num_grid; ++c)
 	{
+		cout << c << endl;
 		// cout<<c<<endl; // Uncomment for printing cell number after each iteration
 		// Filling out the neighboring particle numbers for relocation purposes
 		// Neighboring list consists of 4 cell groups for the cell itself plus neighbors in x, y, z directions behind it

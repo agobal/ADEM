@@ -8,7 +8,7 @@
 
 using namespace std;
 
-TempProfile LaserSintering(struct PowderBed PB)
+TempProfile LaserSintering(PowderBed PB)
 {
 	TempProfile TP;
 	// First step is to initialize the temperature and internal energy matrices
