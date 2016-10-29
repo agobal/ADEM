@@ -16,7 +16,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	float particle_heat_capacity;
 	float preheat_temperature = 500;
 	// Initializing temperatures for all particles inside the powder bed
-	for (int i = 0; i < PB.cell_count; ++i)
+/*	for (int i = 0; i < PB.cell_count; ++i)
 	{
 		for (int j = 0; j < PB.particle_count; ++j)
 		{
@@ -24,7 +24,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 			particle_heat_capacity = solid_heat_capacity*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[j], 3);
 			TP.E[i][j] = TP.T[i][j]*particle_heat_capacity;
 		}
-	}
+	}*/
 
 	// Assign the simulation timestep (seconds)
 	float delta_t = 0.00001;
@@ -38,38 +38,44 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	float rho = 7800;
 	float C_s = 477;
 	int neigh, cell2;	// Middle parameter for setting the neighboring particle
-	for (int t = 0; t < LP.time_steps; ++t)
+	int Adaptive_decision_maker;	// Variable that finds out if we want to perform the small scale analysis on this cell or not
+/*	for (int t = 0; t < LP.time_steps; ++t)
 	{
 		cout << t << endl;
 		for (int cell = 0; cell < PB.cell_count; ++cell)
 	    {
-	    	for (int i = 0; i < PB.particle_count; ++i)
-	    	{   
-	    		Q = 0;
-				for (int j = 0; j < 15; ++j)
-				{
-					if (PB.neighbors[cell][i][j] != 0)
+	    	// Finding out if we want to do the small scale solution on this cell or not
+	    	Adaptive_decision_maker = ADM(cell, PB, TP, LP, t);
+	    	if (Adaptive_decision_maker == 1)
+	    	{
+		    	for (int i = 0; i < PB.particle_count; ++i)
+		    	{   
+		    		Q = 0;
+					for (int j = 0; j < 15; ++j)
 					{
-						if  (PB.neighbors[cell][i][j] > 1000)
+						if (PB.neighbors[cell][i][j] != 0)
 						{
-							neigh = PB.neighbors[cell][i][j];
-							K = CondCoeff(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], PB.x_particles[cell][neigh], PB.y_particles[cell][neigh], PB.z_particles[cell][neigh], PB.r_particles[neigh], TP.T[cell][i], TP.T[cell][neigh]);
-							Q = Q + K*(TP.T[cell][i] - TP.T[cell][neigh]);
+							if  (PB.neighbors[cell][i][j] > 1000)
+							{
+								neigh = PB.neighbors[cell][i][j];
+								K = CondCoeff(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], PB.x_particles[cell][neigh], PB.y_particles[cell][neigh], PB.z_particles[cell][neigh], PB.r_particles[neigh], TP.T[cell][i], TP.T[cell][neigh]);
+								Q = Q + K*(TP.T[cell][i] - TP.T[cell][neigh]);
+							}
+							else
+							{
+								cell2 = (PB.neighbors[cell][i][j]/1000) - 1;
+								if (cell2 != 0)
+									neigh = (PB.neighbors[cell][i][j] % (cell2*1000));
+								K = CondCoeff(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], PB.x_particles[cell2][neigh], PB.y_particles[cell2][neigh], PB.z_particles[cell2][neigh], PB.r_particles[neigh], TP.T[cell][i], TP.T[cell2][neigh]);
+								Q = Q + K*(TP.T[cell][i] - TP.T[cell2][neigh]);
+							}
 						}
-						else
-						{
-							cell2 = (PB.neighbors[cell][i][j]/1000) - 1;
-							if (cell2 != 0)
-								neigh = (PB.neighbors[cell][i][j] % (cell2*1000));
-							K = CondCoeff(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], PB.x_particles[cell2][neigh], PB.y_particles[cell2][neigh], PB.z_particles[cell2][neigh], PB.r_particles[neigh], TP.T[cell][i], TP.T[cell2][neigh]);
-							Q = Q + K*(TP.T[cell][i] - TP.T[cell2][neigh]);
-						}
+						// Laser power getting into the bed
+						I = LaserBeam(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], LP.laser_speed, LP.x_laser[t], LP.y_laser[t]);
+						S = 4.0*atan(1)*PB.r_particles[i]*PB.r_particles[i];		// Particle surface absorbing the laser powder
+						TP.E[cell][i] = TP.E[cell][i] + (Q + K_ab*S*I)*delta_t/(rho*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[i], 3)); //particle energy increase by laser
+						TP.T_temp[cell][i] = TP.E[cell][i]/C_s;	// Particle temperature change
 					}
-					// Laser power getting into the bed
-					I = LaserBeam(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], LP.laser_speed, LP.x_laser[t], LP.y_laser[t]);
-					S = 4.0*atan(1)*PB.r_particles[i]*PB.r_particles[i];		// Particle surface absorbing the laser powder
-					TP.E[cell][i] = TP.E[cell][i] + (Q + K_ab*S*I)*delta_t/(rho*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[i], 3)); //particle energy increase by laser
-					TP.T_temp[cell][i] = TP.E[cell][i]/C_s;	// Particle temperature change
 				}
 			}
 		}
@@ -80,7 +86,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	    		TP.T[cell][i] = TP.T_temp[cell][i];
 	    	}
 	    }
-	}
+	}*/
 
 	return TP;
 }

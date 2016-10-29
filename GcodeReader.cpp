@@ -21,30 +21,38 @@ LaserPath GcodeReader(float delta_t)
 
 
 	// First read the gcode provided by user
-	ifstream gcode("gcode.txt");
-	string str; 
-	int q;
-	q = 0;
-	while(getline(gcode, str))
-	{
-		if (q == 0)
-		{
-			LP.laser_speed = atof(str.c_str());;
-		}
-		q = q + 1;
-		// cout << str << endl;
-	}
-	gcode.close();
+	// ifstream gcode("gcode.txt");
+	// string str; 
+	// int q;
+	// q = 0;
+	// while(getline(gcode, str))
+	// {
+	// 	if (q == 0)
+	// 	{
+	// 		LP.laser_speed = atof(str.c_str());;
+	// 	}
+	// 	q = q + 1;
+	// 	// cout << str << endl;
+	// }
+	// gcode.close();
 
 	float distance = sqrt(pow(0.001 - 0.000, 2) + pow(0.0005 - 0.0005, 2));
-	LP.time_steps = int((distance/(LP.laser_speed))/(delta_t));
-
-	LP.x_laser[0] = 0;
-	LP.y_laser[0] = 0.0005;
-	for (int i = 1; i < LP.time_steps; ++i)
+	// LP.time_steps = int((distance/(LP.laser_speed))/(delta_t));
+	LP.laser_speed = 0.001;
+	LP.time_steps = 99999;
+	cout << LP.time_steps;
+	for (int i = 0; i < LP.time_steps; ++i)
 	{
-		LP.x_laser[i] = LP.x_laser[i - 1] + (0.001 - 0.000)/(float(LP.time_steps));
-		LP.y_laser[i] = LP.y_laser[i - 1] + (0.0005 - 0.0005)/(float(LP.time_steps));
+		if (i == 0)
+		{
+			LP.x_laser[0] = 0;
+			LP.y_laser[0] = 0.0005;
+		}
+		else
+		{
+			LP.x_laser[i] = LP.x_laser[i - 1] + (0.001 - 0.000)/100000.0;
+			LP.y_laser[i] = LP.y_laser[i - 1] + (0.0005 - 0.0005)/100000.0;
+		}
 	}
 	return LP;
 

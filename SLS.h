@@ -60,7 +60,7 @@ struct BedGeometry{
 // PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
 PowderBed PackingGenerator(ParticleChar, BedGeometry, PowderBed);
 
-TempProfile LaserSintering(PowderBed, PowderBed);
+TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG);
 
 LaserPath GcodeReader(float delta_t);
 
@@ -87,3 +87,6 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 
 // Function for calculating the laser beam powder for a certain particle
 float LaserBeam(float x_p, float y_p, float z_p, float r_p, float v_l, float x_l, float y_l);
+
+// Function for finding out if we want to do a small scale analysis on the cell or not
+int ADM(int cell, struct PowderBed PB, struct TempProfile TP, struct LaserPath LP, int t);
