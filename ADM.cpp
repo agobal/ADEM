@@ -11,7 +11,7 @@
 
 using namespace std;
 /* Function for determining if we want to perform small scale calculations on the cell or not */
-int ADM(int cell, PowderBed PB, TempProfile TP, LaserPath LP, int t)
+int ADM(int cell, float x_p[], float y_p[], float T[], float x_l, float y_l, int t)
 {
 	int final_decision;
 	final_decision = 0; // Don't perform small scale on this grid
@@ -25,10 +25,10 @@ int ADM(int cell, PowderBed PB, TempProfile TP, LaserPath LP, int t)
 	sum_y = 0;
 	for (int i = 0; i < 150; ++i)
 	{
-		if ((PB.x_particles[cell][i] != 0) && (PB.y_particles[cell][i] != 0))
+		if ((x_p[i] != 0) && (y_p[i] != 0))
 		{
-			sum_x += PB.x_particles[cell][i];
-			sum_y += PB.y_particles[cell][i];
+			sum_x += x_p[i];
+			sum_y += y_p[i];
 			q = q + 1;
 		}
 	}
@@ -41,14 +41,14 @@ int ADM(int cell, PowderBed PB, TempProfile TP, LaserPath LP, int t)
 
 	for (int i = 0; i < 150; ++i)
 	{
-		if (TP.T[cell][i] > max_temp)
+		if (T[i] > max_temp)
 		{
-			max_temp = TP.T[cell][i];
+			max_temp = T[i];
 			q = i;
 		}
 	}
 
-	float dist = pow(pow(avg_x - LP.x_laser[t], 2) + pow(avg_y - LP.y_laser[t], 2), 0.5);
+	float dist = pow(pow(avg_x - x_l, 2) + pow(avg_y - y_l, 2), 0.5);
 	if ((max_temp > 1000) || (dist < 0.00015))
 		final_decision = 1;
 

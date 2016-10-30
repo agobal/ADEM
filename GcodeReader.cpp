@@ -39,8 +39,8 @@ LaserPath GcodeReader(float delta_t)
 	float distance = sqrt(pow(0.001 - 0.000, 2) + pow(0.0005 - 0.0005, 2));
 	// LP.time_steps = int((distance/(LP.laser_speed))/(delta_t));
 	LP.laser_speed = 0.001;
-	LP.time_steps = 99999;
-	cout << LP.time_steps;
+	LP.time_steps = 1000;
+
 	for (int i = 0; i < LP.time_steps; ++i)
 	{
 		if (i == 0)
@@ -50,8 +50,8 @@ LaserPath GcodeReader(float delta_t)
 		}
 		else
 		{
-			LP.x_laser[i] = LP.x_laser[i - 1] + (0.001 - 0.000)/100000.0;
-			LP.y_laser[i] = LP.y_laser[i - 1] + (0.0005 - 0.0005)/100000.0;
+			LP.x_laser[i] = (0.001 - 0.000)/(float(LP.time_steps));
+			LP.y_laser[i] = (0.0005 - 0.0005)/(float(LP.time_steps));
 		}
 	}
 	return LP;

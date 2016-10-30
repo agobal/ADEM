@@ -22,8 +22,8 @@ struct TempProfile{
 struct LaserPath{
 	int time_steps;
 	float laser_speed;
-	float x_laser[100000];
-	float y_laser[100000];
+	float x_laser[1000];
+	float y_laser[1000];
 };
 
 struct ParticleChar{
@@ -89,4 +89,4 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 float LaserBeam(float x_p, float y_p, float z_p, float r_p, float v_l, float x_l, float y_l);
 
 // Function for finding out if we want to do a small scale analysis on the cell or not
-int ADM(int cell, struct PowderBed PB, struct TempProfile TP, struct LaserPath LP, int t);
+int ADM(int cell, float x_p[], float y_p[], float T[], float x_l, float y_l, int t);

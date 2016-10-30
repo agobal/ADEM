@@ -16,7 +16,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	float particle_heat_capacity;
 	float preheat_temperature = 500;
 	// Initializing temperatures for all particles inside the powder bed
-/*	for (int i = 0; i < PB.cell_count; ++i)
+	for (int i = 0; i < PB.cell_count; ++i)
 	{
 		for (int j = 0; j < PB.particle_count; ++j)
 		{
@@ -24,10 +24,10 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 			particle_heat_capacity = solid_heat_capacity*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[j], 3);
 			TP.E[i][j] = TP.T[i][j]*particle_heat_capacity;
 		}
-	}*/
+	}
 
 	// Assign the simulation timestep (seconds)
-	float delta_t = 0.00001;
+	float delta_t = 0.001;
 	LaserPath LP;
 	// Finding laser path and total number of required time steps and laser location at each time by reading the gcode
 	LP = GcodeReader(delta_t);
@@ -39,13 +39,13 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	float C_s = 477;
 	int neigh, cell2;	// Middle parameter for setting the neighboring particle
 	int Adaptive_decision_maker;	// Variable that finds out if we want to perform the small scale analysis on this cell or not
-/*	for (int t = 0; t < LP.time_steps; ++t)
+	for (int t = 0; t < LP.time_steps; ++t)
 	{
 		cout << t << endl;
 		for (int cell = 0; cell < PB.cell_count; ++cell)
 	    {
 	    	// Finding out if we want to do the small scale solution on this cell or not
-	    	Adaptive_decision_maker = ADM(cell, PB, TP, LP, t);
+	    	Adaptive_decision_maker = ADM(cell, PB.x_particles[cell], PB.y_particles[cell], TP.T[cell], LP.x_laser[t], LP.y_laser[t], t);
 	    	if (Adaptive_decision_maker == 1)
 	    	{
 		    	for (int i = 0; i < PB.particle_count; ++i)
@@ -86,7 +86,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	    		TP.T[cell][i] = TP.T_temp[cell][i];
 	    	}
 	    }
-	}*/
+	}
 
 	return TP;
 }
