@@ -125,29 +125,6 @@ int main()
 	PB_BIG = PackingGenerator(PC_BIG, BG, PB_BIG);
 	cout << PB_BIG.cell_count << " " << PB_BIG.particle_count << endl;
 
-	// Find the closest particle to each large element
-	float closest_particle[PB_BIG.cell_count][PB_BIG.particle_count];
-	float mid_dist;
-	for (int cell = 0; cell < PB_BIG.cell_count; ++cell)
-	{
-		for (int i = 0; i < PB_BIG.particle_count; ++i)
-		{
-			mid_dist = 1;
-			for (int cell2 = 0; cell2 < PB.cell_count; ++cell2)
-			{
-				for (int j = 0; j < PB.particle_count; ++j)
-				{
-					if (pow(pow((PB_BIG.x_particles[cell][i] - PB.x_particles[cell2][j]), 2) + pow((PB_BIG.y_particles[cell][i] - PB.y_particles[cell2][j]), 2) + pow((PB_BIG.z_particles[cell][i] - PB.z_particles[cell2][j]), 2), 0.5) < mid_dist)
-					{
-						mid_dist = pow(pow((PB_BIG.x_particles[cell][i] - PB.x_particles[cell2][j]), 2) + pow((PB_BIG.y_particles[cell][i] - PB.y_particles[cell2][j]), 2) + pow((PB_BIG.z_particles[cell][i] - PB.z_particles[cell2][j]), 2), 0.5);
-						closest_particle[cell][i] = cell2*1000 + j;
-					}
-				}
-			}
-		}
-		cout << cell << endl;
-	}
-
 	//////////////////////////////////////////////////////
 	/////////////// Heat transfer analysis ///////////////
 	//////////////////////////////////////////////////////
