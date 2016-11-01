@@ -18,7 +18,7 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 {
 	// This function calculates the heat conduction coefficient between two powder particles based on their location and temperatures
 	// Thermal properties
-	float k1 = 40; // Thermal conductivity of particle 1
+/*	float k1 = 40; // Thermal conductivity of particle 1
 	float k2 = 40; // Thermal conductivity of particle 2
 	float k_air = 0.02; // Thermal conductivity of air
 	float alpha1 = 1;
@@ -58,7 +58,7 @@ float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, floa
 
 	float h_e = (1.55*m*k/sigma)*pow((P*1.41)/(E_prime*m) , 0.94);
 	float h_c = h_e + (A_v/(A_a*sigma))*k_air;
-	float G = h_c*A_a; // Overall heat transfer (in room temperature)
-	float K = G;
+	float G = h_c*A_a; // Overall heat transfer (in room temperature)*/
+	float K = 1;
 	return K;
 }
