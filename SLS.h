@@ -11,6 +11,8 @@ struct PowderBed{
 struct TempProfile{
 	float T[100][150];
 	float T_BIG[100][150];
+	float T_time[100][150];
+	float T_BIG_time[100][150];
 	float T_temp[100][150];
 	float T_temp_BIG[100][150];
 	float E[100][150];
@@ -60,7 +62,7 @@ struct BedGeometry{
 // PowderBed PackingGenerator(struct ParticleChar PC, struct BedGeometry BG1, struct PowderBed PB);
 PowderBed PackingGenerator(ParticleChar, BedGeometry, PowderBed);
 
-TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG);
+TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep);
 
 LaserPath GcodeReader(float delta_t);
 

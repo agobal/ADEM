@@ -8,7 +8,7 @@
 
 using namespace std;
 
-TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
+TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 {
 	// Find the closest particle to each large element
 	int closest_particle[PB_BIG.cell_count][PB_BIG.particle_count];
@@ -73,6 +73,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	    	Adaptive_decision_maker = ADM(cell, PB.x_particles[cell], PB.y_particles[cell], TP.T[cell], LP.x_laser[t], LP.y_laser[t], t);
 	    	if (Adaptive_decision_maker == 1)
 	    	{
+	    		cout<<"11111111111111111111111111111111111111111111111111";
 		    	for (int i = 0; i < PB.particle_count; ++i)
 		    	{   
 		    		Q = 0;
@@ -97,6 +98,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 						}
 						// Laser power getting into the bed
 						I = LaserBeam(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], LP.laser_speed, LP.x_laser[t], LP.y_laser[t]);
+						// cout << I << endl;
 						S = 4.0*atan(1)*PB.r_particles[i]*PB.r_particles[i];		// Particle surface absorbing the laser powder
 						TP.E[cell][i] = TP.E[cell][i] + (Q + K_ab*S*I)*delta_t/(rho*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[i], 3)); //particle energy increase by laser
 						TP.T_temp[cell][i] = TP.E[cell][i]/C_s;	// Particle temperature change
@@ -150,6 +152,8 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	    	for (int i = 0; i < PB.particle_count; ++i)
 	    	{
 	    		TP.T[cell][i] = TP.T_temp[cell][i];
+	    		if (t == output_timestep)
+		    		TP.T_time[cell][i] = TP.T[cell][i];
 	    	}
 	    }
 		for (int cell = 0; cell < PB_BIG.cell_count; ++cell)
@@ -157,6 +161,8 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG)
 	    	for (int i = 0; i < PB_BIG.particle_count; ++i)
 	    	{
 	    		TP.T_BIG[cell][i] = TP.T_temp_BIG[cell][i];
+	    		if (t == output_timestep)
+		    		TP.T_BIG_time[cell][i] = TP.T_BIG[cell][i];
 	    	}
 	    }
 	}
