@@ -32,8 +32,8 @@ int ADM(int cell, float x_p[], float y_p[], float T[], float x_l, float y_l, int
 			q = q + 1;
 		}
 	}
-	avg_x = sum_x/q;
-	avg_y = sum_y/q;
+	avg_x = sum_x/(1000.0*q);
+	avg_y = sum_y/(1000.0*q);
 
 	// Finding maximum temperature of the grid cell
 	float max_temp;

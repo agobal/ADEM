@@ -25,8 +25,8 @@ int main()
 	BedGeometry BG;
 	/* Powder bed dimensions and layer thickness (all in milimeters) */
 
-	BG.bed_x = 1.0;
-	BG.bed_y = 1.0;
+	BG.bed_x = 0.2;
+	BG.bed_y = 0.2;
 	BG.bed_z = 2.0;
 	BG.layer_thickness = 0.05;
 	BG.layer_thickness_big = 0.0625;
@@ -130,14 +130,14 @@ int main()
 	//////////////////////////////////////////////////////
 
 	// Function for heat transfer analysis
-	int output_timestep = 500;
+	int output_timestep = 0;
 	TempProfile TP;
 	TP = LaserSintering(PB, PB_BIG, output_timestep);
 
 	// Write temperature values to text file
 	ofstream myfile;
 	myfile.open("temp.txt");
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		for (int j = 0; j < 150; ++j)
 		{

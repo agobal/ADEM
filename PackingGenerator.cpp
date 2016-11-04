@@ -27,6 +27,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 			PB.x_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_x - 2.0*PB.r_particles[i]) + PB.r_particles[i] + float((cell_x_num[i] - 1))*BG1.grid_x;
 			PB.y_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_y - 2.0*PB.r_particles[i]) + PB.r_particles[i] + float((cell_y_num[i] - 1))*BG1.grid_y;
 			PB.z_particles[i][j] = ((double) rand() / (RAND_MAX))*(BG1.grid_z - 2.0*PB.r_particles[i]) + PB.r_particles[i] + float((cell_z_num[i] - 1))*BG1.grid_z;
+			PB.sintering_flag[i][j] = 0;
 		}
 	}
 

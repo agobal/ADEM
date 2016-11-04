@@ -1,24 +1,25 @@
 struct PowderBed{
-	float x_particles[100][150];
-	float y_particles[100][150];
-	float z_particles[100][150];
+	float x_particles[4][150];
+	float y_particles[4][150];
+	float z_particles[4][150];
 	float r_particles[150];
-	int neighbors[100][150][20];
+	int sintering_flag[4][150];
+	int neighbors[4][150][20];
 	int particle_count;
 	int cell_count;
 };
 
 struct TempProfile{
-	float T[100][150];
-	float T_BIG[100][150];
-	float T_time[100][150];
-	float T_BIG_time[100][150];
-	float T_temp[100][150];
-	float T_temp_BIG[100][150];
-	float E[100][150];
-	float E_BIG[100][150];
-	float E_temp[100][150];
-	float E_temp_BIG[100][150];
+	float T[4][150];
+	float T_BIG[4][150];
+	float T_time[4][150];
+	float T_BIG_time[4][150];
+	float T_temp[4][150];
+	float T_temp_BIG[4][150];
+	float E[4][150];
+	float E_BIG[4][150];
+	float E_temp[4][150];
+	float E_temp_BIG[4][150];
 };
 
 struct LaserPath{
@@ -33,6 +34,14 @@ struct ParticleChar{
 	float stddev;
 	float packfrac;
 	int nmin;
+};
+
+struct ParticleDiffusion{
+	float K;
+	float x_new;
+	float y_new;
+	float z_new;
+	int sintering_flag;
 };
 
 struct BedGeometry{
@@ -85,7 +94,7 @@ float* RadiusFinder(struct ParticleChar PC, float grid_volume);
 // void OutputWriter(PowderBed);
 
 // Function for calculating the heat transfer coefficient between two particles based on their position and temperatures
-float CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, float z2, float r2, float T1, float T2);
+ParticleDiffusion CondCoeff(float x1, float y1, float z1, float r1, float x2, float y2, float z2, float r2, int sinter_flag, float T1, float T2, float delta_t);
 
 // Function for calculating the laser beam powder for a certain particle
 float LaserBeam(float x_p, float y_p, float z_p, float r_p, float v_l, float x_l, float y_l);
