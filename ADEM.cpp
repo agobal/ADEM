@@ -100,13 +100,13 @@ int main()
 	PC_BIG.stddev = 5.0/1000.0;		// Standard deviation of the particles inside packing
 	PC_BIG.packfrac = 0.63;	// Packing fraction of the bed
 	PC_BIG.nmin = BG.grid_volume_big/((4.0/3.0)*4.0*atan(1.0)*pow((PC_BIG.avgrd), 3.0));		// Minimum number of particles inside each grid
-	cout << PC_BIG.nmin << endl;
+	// cout << PC_BIG.nmin << endl;
 	/* Finding out the number of powders inside each grid */
 	float* p_r_b;
 	p_r_b = RadiusFinder(PC_BIG, BG.grid_volume_big);
 
 	static int num_big_particle_grid = int(p_r_b[0]);
-	cout << num_big_particle_grid << endl;
+	// cout << num_big_particle_grid << endl;
 	// Creating the new array for particle diameters
 	float big_particle_radius[num_big_particle_grid];
 	for (int i = 0; i < num_big_particle_grid; ++i)
@@ -123,7 +123,7 @@ int main()
 
 	// Populate the powder bed properties class
 	PB_BIG = PackingGenerator(PC_BIG, BG, PB_BIG);
-	cout << PB_BIG.cell_count << " " << PB_BIG.particle_count << endl;
+	// cout << PB_BIG.cell_count << " " << PB_BIG.particle_count << endl;
 
 	//////////////////////////////////////////////////////
 	/////////////// Heat transfer analysis ///////////////

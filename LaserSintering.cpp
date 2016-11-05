@@ -75,7 +75,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 	    	Adaptive_decision_maker = ADM(cell, PB.x_particles[cell], PB.y_particles[cell], TP.T[cell], LP.x_laser[t], LP.y_laser[t], t);
 	    	if (Adaptive_decision_maker == 1)
 	    	{
-	    		cout << cell << " " << LP.x_laser[t] << " " << LP.y_laser[t] << endl;
+	    		// cout << cell << " " << LP.x_laser[t] << " " << LP.y_laser[t] << endl;
 		    	for (int i = 0; i < PB.particle_count; ++i)
 		    	{   
 		    		Q = 0;
@@ -83,7 +83,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 					{
 						if (PB.neighbors[cell][i][j] != 0)
 						{
-							if  (PB.neighbors[cell][i][j] > 1000)
+							if  (PB.neighbors[cell][i][j] < 1000)
 							{
 								neigh = PB.neighbors[cell][i][j];
 								PD = CondCoeff(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], PB.x_particles[cell][neigh], PB.y_particles[cell][neigh], PB.z_particles[cell][neigh], PB.r_particles[neigh], PB.sintering_flag[cell][neigh], TP.T[cell][i], TP.T[cell][neigh], delta_t);
