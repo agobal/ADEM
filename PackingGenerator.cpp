@@ -170,7 +170,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 				{
 					if (j != i)
 					{
-						if (abs(PB.r_particles[i] + PB.r_particles[j] - sqrt(pow(PB.x_particles[c][i] - PB.x_particles[c][j], 2.0) + pow(PB.y_particles[c][i] - PB.y_particles[c][j], 2.0) + pow(PB.z_particles[c][i] - PB.z_particles[c][j], 2.0))) < 0.000001)
+						if (abs(PB.r_particles[i] + PB.r_particles[j] - pow(pow(PB.x_particles[c][i] - PB.x_particles[c][j], 2.0) + pow(PB.y_particles[c][i] - PB.y_particles[c][j], 2.0) + pow(PB.z_particles[c][i] - PB.z_particles[c][j], 2.0), 0.5)) < 0.000001)
 						{
 							PB.neighbors[c][i][q2] = j;
 							q2 = q2 + 1;

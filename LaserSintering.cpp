@@ -91,8 +91,8 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 								PB.y_particles[cell][neigh] = PD.y_new;
 								PB.z_particles[cell][neigh] = PD.z_new;
 								Q = Q + PD.K*(TP.T[cell][i] - TP.T[cell][neigh]);
-								if (t == 0)
-									cout << cell << " " << i << " " << PD.K << " " << Q << endl;
+								// if (t == 0)
+									// cout << cell << " " << i << " " << neigh << " " << PD.K << " " << Q << endl;
 							}
 							else
 							{
