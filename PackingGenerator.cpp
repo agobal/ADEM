@@ -153,7 +153,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 						PB.x_particles[c][i] = PB.r_particles[i];
 					if ((cell_y_num[c] == 1) && (PB.y_particles[c][i] <= (BG1.grid_y*(cell_y_num[c] - 1) + PB.r_particles[i])))
 						PB.y_particles[c][i] = PB.r_particles[i];
-					if ((cell_z_num[c] == 1) && (PB.z_particles[c][i] <= (BG1.grid_z*(cell_z_num[c] - 1) + PB.r_particles[i])))
+					// if ((cell_z_num[c] == 1) && (PB.z_particles[c][i] <= (BG1.grid_z*(cell_z_num[c] - 1) + PB.r_particles[i])))
 						PB.z_particles[c][i] = PB.r_particles[i];
 				}
 			}
@@ -170,7 +170,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 				{
 					if (j != i)
 					{
-						if (abs(PB.r_particles[i] + PB.r_particles[j] - pow(pow(PB.x_particles[c][i] - PB.x_particles[c][j], 2.0) + pow(PB.y_particles[c][i] - PB.y_particles[c][j], 2.0) + pow(PB.z_particles[c][i] - PB.z_particles[c][j], 2.0), 0.5)) < 0.000001)
+						if (fabs(PB.r_particles[i] + PB.r_particles[j] - pow(pow(PB.x_particles[c][i] - PB.x_particles[c][j], 2.0) + pow(PB.y_particles[c][i] - PB.y_particles[c][j], 2.0) + pow(PB.z_particles[c][i] - PB.z_particles[c][j], 2.0), 0.5)) < 0.000001)
 						{
 							PB.neighbors[c][i][q2] = j;
 							q2 = q2 + 1;
@@ -185,7 +185,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 						neighbor_part = (neighbor_particles[j] % (neighbor_cell*1000));
 					if ((neighbor_cell != 0) && (neighbor_part != 0))
 					{
-						if (abs(PB.r_particles[i] + PB.r_particles[neighbor_part] - sqrt(pow(PB.x_particles[c][i] - PB.x_particles[neighbor_cell][neighbor_part], 2.0) + pow(PB.y_particles[c][i] - PB.y_particles[neighbor_cell][neighbor_part], 2.0) + pow(PB.z_particles[c][i] - PB.z_particles[neighbor_cell][neighbor_part], 2.0))) < 0.000001)
+						if (fabs(PB.r_particles[i] + PB.r_particles[neighbor_part] - sqrt(pow(PB.x_particles[c][i] - PB.x_particles[neighbor_cell][neighbor_part], 2.0) + pow(PB.y_particles[c][i] - PB.y_particles[neighbor_cell][neighbor_part], 2.0) + pow(PB.z_particles[c][i] - PB.z_particles[neighbor_cell][neighbor_part], 2.0))) < 0.000001)
 						{
 							PB.neighbors[c][i][q2] = neighbor_particles[j];
 							q2 = q2 + 1;

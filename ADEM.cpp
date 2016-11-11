@@ -123,7 +123,15 @@ int main()
 
 	// Populate the powder bed properties class
 	PB_BIG = PackingGenerator(PC_BIG, BG, PB_BIG);
-	// cout << PB_BIG.cell_count << " " << PB_BIG.particle_count << endl;
+
+/*	for (int i = 0; i < 100; ++i)
+	{
+		for (int j = 0; j < 10; ++j)
+		{
+			cout << PB.neighbors[0][i][j] << " ";
+		}
+		cout << endl;
+	}*/
 
 	//////////////////////////////////////////////////////
 	/////////////// Heat transfer analysis ///////////////
