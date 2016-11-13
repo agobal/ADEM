@@ -25,8 +25,8 @@ int main()
 	BedGeometry BG;
 	/* Powder bed dimensions and layer thickness (all in milimeters) */
 
-	BG.bed_x = 0.2;
-	BG.bed_y = 0.2;
+	BG.bed_x = 1.0;
+	BG.bed_y = 1.0;
 	BG.bed_z = 2.0;
 	BG.layer_thickness = 0.05;
 	BG.layer_thickness_big = 0.0625;
@@ -100,13 +100,13 @@ int main()
 	PC_BIG.stddev = 5.0/1000.0;		// Standard deviation of the particles inside packing
 	PC_BIG.packfrac = 0.63;	// Packing fraction of the bed
 	PC_BIG.nmin = BG.grid_volume_big/((4.0/3.0)*4.0*atan(1.0)*pow((PC_BIG.avgrd), 3.0));		// Minimum number of particles inside each grid
-	// cout << PC_BIG.nmin << endl;
+
 	/* Finding out the number of powders inside each grid */
 	float* p_r_b;
 	p_r_b = RadiusFinder(PC_BIG, BG.grid_volume_big);
 
 	static int num_big_particle_grid = int(p_r_b[0]);
-	// cout << num_big_particle_grid << endl;
+
 	// Creating the new array for particle diameters
 	float big_particle_radius[num_big_particle_grid];
 	for (int i = 0; i < num_big_particle_grid; ++i)
@@ -124,15 +124,6 @@ int main()
 	// Populate the powder bed properties class
 	PB_BIG = PackingGenerator(PC_BIG, BG, PB_BIG);
 
-/*	for (int i = 0; i < 100; ++i)
-	{
-		for (int j = 0; j < 10; ++j)
-		{
-			cout << PB.neighbors[0][i][j] << " ";
-		}
-		cout << endl;
-	}*/
-
 	//////////////////////////////////////////////////////
 	/////////////// Heat transfer analysis ///////////////
 	//////////////////////////////////////////////////////
@@ -145,14 +136,7 @@ int main()
 	// Write temperature values to text file
 	ofstream myfile;
 	myfile.open("temp.txt");
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 0; j < 150; ++j)
-		{
-			myfile << TP.T_time[i][j] << " ";
-		}
-		myfile << endl;
-	}
+
 	myfile.close();
 	/* Making up the powder bed */
 	// PB = PackingGenerator(PC1, particle_diameter, );	// Generating the desired packing 

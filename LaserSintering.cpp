@@ -51,7 +51,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 	}
 
 	// Assign the simulation timestep (seconds)
-	float delta_t = 0.001;
+	float delta_t = 0.000001;
 	LaserPath LP;
 	// Finding laser path and total number of required time steps and laser location at each time by reading the gcode
 	LP = GcodeReader(delta_t);
@@ -66,15 +66,15 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 	int Adaptive_decision_maker;	// Variable that finds out if we want to perform the small scale analysis on this cell or not
 	ParticleDiffusion PD;
 	ParticleDiffusion PD_BIG;
+
 	for (int t = 0; t < LP.time_steps; ++t)
 	{
-		cout << t << endl;
+		cout << "timestep:" << " " << t << endl;
 		// Solving for the small (particle size) packing
 		for (int cell = 0; cell < PB.cell_count; ++cell)
 	    {
 	    	// Finding out if we want to do the small scale solution on this cell or not
 	    	Adaptive_decision_maker = ADM(cell, PB.x_particles[cell], PB.y_particles[cell], TP.T[cell], LP.x_laser[t], LP.y_laser[t], t);
-	    	cout << Adaptive_decision_maker << endl;
 	    	if (Adaptive_decision_maker == 1)
 	    	{
 	    		// cout << cell << " " << LP.x_laser[t] << " " << LP.y_laser[t] << endl;

@@ -20,7 +20,7 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 		cell_x_num[i] = (i % BG1.num_grid_x) + 1;
 		cell_y_num[i] = (i % (BG1.num_grid_x*BG1.num_grid_y))/BG1.num_grid_x + 1;
 		cell_z_num[i] = floor(i/(BG1.num_grid_x*BG1.num_grid_y) ) + 1;
-		// cout << i << " " << cell_x_num[i] << " " << cell_y_num[i] << " " << cell_z_num[i] << endl;	//Uncomment for testing cell numbering
+
 		for (int j = 0; j < PB.particle_count; ++j)
 		{
 			// Assigning initial random locations to particles
@@ -38,7 +38,6 @@ PowderBed PackingGenerator(ParticleChar PC, BedGeometry BG1, PowderBed PB)
 	for (int c = 0; c < BG1.num_grid; ++c)
 	{
 		cout << c << endl;
-		// cout<<c<<endl; // Uncomment for printing cell number after each iteration
 		// Filling out the neighboring particle numbers for relocation purposes
 		// Neighboring list consists of 4 cell groups for the cell itself plus neighbors in x, y, z directions behind it
 		int neighbor_particles[4*PB.particle_count];

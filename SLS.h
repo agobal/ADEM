@@ -1,25 +1,25 @@
 struct PowderBed{
-	float x_particles[4][150];
-	float y_particles[4][150];
-	float z_particles[4][150];
+	float x_particles[100][150];
+	float y_particles[100][150];
+	float z_particles[100][150];
 	float r_particles[150];
-	int sintering_flag[4][150];
-	int neighbors[4][150][20];
+	int sintering_flag[100][150];
+	int neighbors[100][150][20];
 	int particle_count;
 	int cell_count;
 };
 
 struct TempProfile{
-	float T[4][150];
-	float T_BIG[4][150];
-	float T_time[4][150];
-	float T_BIG_time[4][150];
-	float T_temp[4][150];
-	float T_temp_BIG[4][150];
-	float E[4][150];
-	float E_BIG[4][150];
-	float E_temp[4][150];
-	float E_temp_BIG[4][150];
+	float T[100][150];
+	float T_BIG[100][150];
+	float T_time[100][150];
+	float T_BIG_time[100][150];
+	float T_temp[100][150];
+	float T_temp_BIG[100][150];
+	float E[100][150];
+	float E_BIG[100][150];
+	float E_temp[100][150];
+	float E_temp_BIG[100][150];
 };
 
 struct LaserPath{
