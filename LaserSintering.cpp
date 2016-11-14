@@ -45,7 +45,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 		{
 			TP.T[i][j] = preheat_temperature;
 			TP.T_temp[i][j] = TP.T[i][j];
-			particle_heat_capacity = solid_heat_capacity*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[j], 3);
+			particle_heat_capacity = solid_heat_capacity*7800.0*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[j], 3);
 			TP.E[i][j] = TP.T[i][j]*particle_heat_capacity;
 		}
 	}
@@ -69,7 +69,7 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 
 	for (int t = 0; t < LP.time_steps; ++t)
 	{
-		cout << "timestep:" << " " << t << endl;
+		cout << LP.time_steps << " " << "timestep:" << " " << t << endl;
 		// Solving for the small (particle size) packing
 		for (int cell = 0; cell < PB.cell_count; ++cell)
 	    {
@@ -107,10 +107,10 @@ TempProfile LaserSintering(PowderBed PB, PowderBed PB_BIG, int output_timestep)
 							}
 						}
 						// Laser power getting into the bed
-						I = 0;//LaserBeam(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], LP.laser_speed, LP.x_laser[t], LP.y_laser[t]);
+						I = LaserBeam(PB.x_particles[cell][i], PB.y_particles[cell][i], PB.z_particles[cell][i], PB.r_particles[i], LP.laser_speed, LP.x_laser[t], LP.y_laser[t]);
 						S = 4.0*atan(1)*PB.r_particles[i]*PB.r_particles[i];		// Particle surface absorbing the laser powder
 						TP.E[cell][i] = TP.E[cell][i] + (Q + K_ab*S*I)*delta_t/(rho*(4.0/3.0)*4.0*atan(1)*pow(PB.r_particles[i], 3)); //particle energy increase by laser
-						TP.T_temp[cell][i] = TP.E[cell][i]/C_s;	// Particle temperature change
+						TP.T_temp[cell][i] = TP.E[cell][i]/solid_heat_capacity;	// Particle temperature change
 					}
 				}
 			}

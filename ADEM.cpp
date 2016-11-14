@@ -129,14 +129,21 @@ int main()
 	//////////////////////////////////////////////////////
 
 	// Function for heat transfer analysis
-	int output_timestep = 0;
+	int output_timestep = 500;
 	TempProfile TP;
 	TP = LaserSintering(PB, PB_BIG, output_timestep);
 
 	// Write temperature values to text file
 	ofstream myfile;
 	myfile.open("temp.txt");
-
+	for (int cell = 0; cell < PB.cell_count; ++cell)
+	{
+		for (int p = 0; p < PB.particle_count; ++p)
+		{
+			myfile << TP.T[cell][p] << " ";
+		}
+		myfile << endl;
+	}
 	myfile.close();
 	/* Making up the powder bed */
 	// PB = PackingGenerator(PC1, particle_diameter, );	// Generating the desired packing 
